@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Joga Aurora</title>
+    <script>
+      // Set initial theme ASAP to avoid flash
+      (function () {
+        try {
+          var storageKey = "vite-ui-theme";
+          var theme = localStorage.getItem(storageKey);
+          var mql = window.matchMedia('(prefers-color-scheme: dark)');
+          var system = mql.matches ? 'dark' : 'light';
+          var resolved = theme === 'light' || theme === 'dark' ? theme : system;
+          var root = document.documentElement;
+          root.classList.remove('light', 'dark');
+          root.classList.add(resolved);
+        } catch (_) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
