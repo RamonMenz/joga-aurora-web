@@ -10,7 +10,9 @@ import {
 import type { AttendanceStatus } from "@/types/attendance";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { useClassroom } from "@/context/classroom/useClassroom";
+import { useClassrooms } from "@/context/classroom/useClassroom";
+import type { Student } from "@/types/student";
+import type { Attendance } from "@/types/attendance";
 
 interface AttendanceTableProps {
   isAttendanceMode: boolean;
@@ -29,7 +31,7 @@ export const StudentsTable: React.FC<AttendanceTableProps> = ({
   onAttendanceChange,
   onRowClick,
 }) => {
-  const { classroom, attendances } = useClassroom();
+  const { classroom, attendances } = useClassrooms();
 
   if (!classroom) {
     return null;
@@ -48,9 +50,9 @@ export const StudentsTable: React.FC<AttendanceTableProps> = ({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {estudantes.map((student) => {
+            {estudantes.map((student: Student) => {
               const attendance = attendances.find(
-                (att) => att.estudante.id === student.id
+                (att: Attendance) => att.estudante.id === student.id
               );
               const status = attendance?.status || "Ausente";
 

@@ -11,4 +11,23 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    // Otimizações de build
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Separar vendor chunks para melhor caching
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          ui: ['@radix-ui/react-dialog', '@radix-ui/react-select', '@radix-ui/react-tabs'],
+          forms: ['react-hook-form', '@hookform/resolvers', 'zod'],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 600,
+  },
+  server: {
+    port: 3000,
+    open: true,
+  },
 });

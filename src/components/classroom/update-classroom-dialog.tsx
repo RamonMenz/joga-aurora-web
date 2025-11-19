@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import classroomService from "@/api/services/classroomService";
 import { toast } from "sonner";
+import { useClassrooms } from "@/context/classroom/useClassroom";
 import { Pencil } from "lucide-react";
 
 interface UpdateClassroomDialogProps {
@@ -46,6 +47,7 @@ export const UpdateClassroomDialog: React.FC<UpdateClassroomDialogProps> = ({
   classroomName,
   onClassroomUpdated,
 }) => {
+  const { loadClassrooms } = useClassrooms();
   const {
     register,
     handleSubmit,
@@ -64,6 +66,7 @@ export const UpdateClassroomDialog: React.FC<UpdateClassroomDialogProps> = ({
       success: () => {
         reset({ name: data.name });
         onClassroomUpdated();
+        void loadClassrooms();
         return "Turma editada com sucesso!";
       },
       error: (error) => {

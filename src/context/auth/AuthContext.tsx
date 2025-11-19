@@ -13,10 +13,5 @@ export interface AuthContextType {
   logout: () => Promise<void>;
 }
 
-export const AuthContext = createContext<AuthContextType>({
-  user: null,
-  setUser: () => null,
-  isAuthenticated: false,
-  login: async () => {},
-  logout: async () => {},
-});
+// Context inicial como undefined para detectar uso fora do provider
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);

@@ -29,6 +29,7 @@ import physicalTestService from "@/api/services/physicalTestService";
 import type { Student } from "@/types/student";
 import type { PhysicalTest } from "@/types/physicalTest";
 import { StudentDataValidationDialog } from "../student/student-data-validation-dialog";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 interface PhysicalTestDialogProps {
   student: Student;
@@ -304,6 +305,11 @@ export const PhysicalTestDialog: React.FC<PhysicalTestDialogProps> = ({
               </div>
             </div>
             <DialogFooter>
+              <DialogClose asChild>
+              <Button type="button" variant="outline" disabled={isSubmitting}>
+                Cancelar
+              </Button>
+            </DialogClose>
               <Button type="submit" disabled={isSubmitting}>
                 {isSubmitting ? "Salvando..." : "Salvar"}
               </Button>

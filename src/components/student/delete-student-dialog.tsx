@@ -1,18 +1,19 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-  DialogDescription,
-} from "@/components/ui/dialog";
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { TrashIcon, Ban } from "lucide-react";
-import studentService from "@/api/services/studentService";
+import { TrashIcon } from "lucide-react";
 import { toast } from "sonner";
+import studentService from "@/api/services/studentService";
 
 interface DeleteStudentDialogProps {
   studentId: string;
@@ -25,17 +26,13 @@ export const DeleteStudentDialog: React.FC<DeleteStudentDialogProps> = ({
   studentName,
   onStudentDeleted,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleDelete = async () => {
-    const promise = studentService.delete(studentId);
-
-    toast.promise(promise, {
+    toast.promise(studentService.delete(studentId), {
       loading: "Excluindo estudante...",
       success: () => {
         onStudentDeleted();
-        setIsOpen(false);
         navigate(`/turmas`);
         return `Estudante "${studentName}" excluído com sucesso.`;
       },
@@ -44,31 +41,27 @@ export const DeleteStudentDialog: React.FC<DeleteStudentDialogProps> = ({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button variant="destructive" size="sm">
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button variant="destructive">
           <TrashIcon className="mr-2 h-4 w-4" />
-          Excluir
+          Excluir Estudante
         </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Confirmar Exclusão</DialogTitle>
-          <DialogDescription>
-            Tem certeza que deseja remover o estudante "{studentName}"? Todos os seus dados, incluindo registros de presença, medidas corporais e testes físicos serão perdidos. Essa ação não pode ser desfeita.
-          </DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
-          <Button variant="outline" onClick={() => setIsOpen(false)}>
-            <Ban className="mr-2 h-4 w-4" />
-            Cancelar
-          </Button>
-          <Button variant="destructive" onClick={handleDelete}>
-            <TrashIcon className="mr-2 h-4 w-4" />
-            Excluir
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
+          <AlertDialogDescription>
+            Tem certeza que deseja remover o estudante "{studentName}"? Todos os
+            seus dados, incluindo registros de presença, medidas corporais e
+            testes físicos serão perdidos. Essa ação não pode ser desfeita.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogAction onClick={handleDelete}>Excluir</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };

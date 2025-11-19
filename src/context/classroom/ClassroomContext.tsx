@@ -1,16 +1,19 @@
-// src/context/classroom/ClassroomContext.tsx
 import type { Classroom } from "@/types/classroom";
 import type { Attendance } from "@/types/attendance";
 import { createContext } from "react";
 
-export interface ClassroomContextType {
+export interface ClassroomsContextType {
+  classrooms: Classroom[];
+  areClassroomsLoading: boolean;
+  loadClassrooms: () => Promise<void>;
+
   classroom: Classroom | null;
-  loading: boolean;
+  isClassroomLoading: boolean;
+  loadClassroom: () => Promise<void>;
+  clearClassroom: () => void;
+
   attendances: Attendance[];
-  setAttendances: React.Dispatch<React.SetStateAction<Attendance[]>>;
-  fetchClassroomData: () => void;
+  updateAttendanceList: (updater: (prev: Attendance[]) => Attendance[]) => void;
 }
 
-export const ClassroomContext = createContext<ClassroomContextType | null>(
-  null
-);
+export const ClassroomsContext = createContext<ClassroomsContextType | null>(null);

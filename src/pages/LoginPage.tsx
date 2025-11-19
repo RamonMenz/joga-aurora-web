@@ -18,16 +18,29 @@ import { Label } from "@/components/ui/label";
 import { Container } from "@/components/common/container";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { VALIDATION, TOAST_MESSAGES, ROUTES } from "@/util/constants";
 
 const loginSchema = z.object({
   username: z
     .string()
-    .min(5, "O nome de usuário deve ter pelo menos 5 caracteres.")
-    .max(256, "O nome de usuário é muito longo."),
+    .min(
+      VALIDATION.USERNAME.MIN_LENGTH,
+      `O nome de usuário deve ter pelo menos ${VALIDATION.USERNAME.MIN_LENGTH} caracteres.`
+    )
+    .max(
+      VALIDATION.USERNAME.MAX_LENGTH,
+      "O nome de usuário é muito longo."
+    ),
   password: z
     .string()
-    .min(6, "A senha deve ter pelo menos 6 caracteres.")
-    .max(128, "A senha é muito longa."),
+    .min(
+      VALIDATION.PASSWORD.MIN_LENGTH,
+      `A senha deve ter pelo menos ${VALIDATION.PASSWORD.MIN_LENGTH} caracteres.`
+    )
+    .max(
+      VALIDATION.PASSWORD.MAX_LENGTH,
+      "A senha é muito longa."
+    ),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -56,19 +69,19 @@ export const LoginPage: React.FC = () => {
         if (result && "error" in result) {
           throw new Error(
             result.error?.status === 401
-              ? "Usuário ou senha incorretos."
-              : result.error.message || "Erro ao realizar login."
+              ? TOAST_MESSAGES.ERROR.UNAUTHORIZED
+              : result.error.message || TOAST_MESSAGES.ERROR.LOGIN
           );
         }
         return { username: data.username };
       },
       {
-        loading: "Verificando credenciais...",
+        loading: TOAST_MESSAGES.LOADING.LOGIN,
         success: (data) => {
-          navigate("/");
+          navigate(ROUTES.HOME);
           return `Bem-vindo, ${data.username}!`;
         },
-        error: (err) => err.message || "Erro ao realizar login.",
+        error: (err) => err.message || TOAST_MESSAGES.ERROR.LOGIN,
       }
     );
 
@@ -77,7 +90,7 @@ export const LoginPage: React.FC = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/");
+      navigate(ROUTES.HOME);
     }
   }, [isAuthenticated, navigate]);
 
@@ -97,11 +110,14 @@ export const LoginPage: React.FC = () => {
               <Input
                 id="username"
                 placeholder="Digite seu usuário"
+                autoComplete="username"
+                aria-invalid={!!errors.username}
+                aria-describedby={errors.username ? "username-error" : undefined}
                 {...register("username")}
                 disabled={loading}
               />
               {errors.username && (
-                <p className="text-sm text-red-500">
+                <p id="username-error" className="text-sm text-red-500" role="alert">
                   {errors.username.message}
                 </p>
               )}
@@ -113,6 +129,9 @@ export const LoginPage: React.FC = () => {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Digite sua senha"
+                  autoComplete="current-password"
+                  aria-invalid={!!errors.password}
+                  aria-describedby={errors.password ? "password-error" : undefined}
                   {...register("password")}
                   disabled={loading}
                 />
@@ -120,12 +139,13 @@ export const LoginPage: React.FC = () => {
                   type="button"
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
                   onClick={() => setShowPassword((prev) => !prev)}
+                  aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
               {errors.password && (
-                <p className="text-sm text-red-500">
+                <p id="password-error" className="text-sm text-red-500" role="alert">
                   {errors.password.message}
                 </p>
               )}
@@ -137,6 +157,7 @@ export const LoginPage: React.FC = () => {
               type="submit"
               className={cn("w-full", loading && "opacity-70")}
               disabled={loading}
+              aria-busy={loading}
             >
               {loading ? "Entrando..." : "Entrar"}
             </Button>

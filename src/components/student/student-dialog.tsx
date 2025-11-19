@@ -29,7 +29,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { CalendarIcon, Save, Ban } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import {
@@ -40,7 +40,7 @@ import {
 } from "@/types/student";
 import type { Classroom } from "@/types/classroom";
 import studentService from "@/api/services/studentService";
-import classroomService from "@/api/services/classroomService";
+import { useClassrooms } from "@/context/classroom/useClassroom";
 import { toast } from "sonner";
 import { toBackendGender } from "@/util/gender";
 import { ptBR } from "date-fns/locale";
@@ -74,6 +74,8 @@ export const StudentDialog: React.FC<StudentDialogProps> = ({
 }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [classrooms, setClassrooms] = useState<Classroom[]>([]);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const { classrooms: contextClassrooms, loadClassrooms } = useClassrooms();
 
   const isEditMode = !!student;
 
@@ -90,11 +92,20 @@ export const StudentDialog: React.FC<StudentDialogProps> = ({
 
   const watchedGender = watch("gender");
 
+
   useEffect(() => {
     if (isDialogOpen) {
-      classroomService.getAll({ page: 0, size: 100 }).then((response) => {
-        setClassrooms(response.content);
-      });
+      // If context hasn't loaded classrooms yet, refresh
+      if (!contextClassrooms || contextClassrooms.length === 0) {
+        void loadClassrooms();
+      }
+      setClassrooms(contextClassrooms ?? []);
+    }
+  }, [isDialogOpen, contextClassrooms, loadClassrooms]);
+
+  useEffect(() => {
+    if (!isDialogOpen) {
+      setIsCalendarOpen(false);
     }
   }, [isDialogOpen]);
 
@@ -113,7 +124,7 @@ export const StudentDialog: React.FC<StudentDialogProps> = ({
         reset({
           name: "",
           gender: "N",
-          classroomId: classroomId,
+          classroomId: classroomId || "",
         });
       }
     }
@@ -195,7 +206,10 @@ export const StudentDialog: React.FC<StudentDialogProps> = ({
                   name="birthDate"
                   control={control}
                   render={({ field }) => (
-                    <Popover>
+                    <Popover
+                      open={isCalendarOpen}
+                      onOpenChange={setIsCalendarOpen}
+                    >
                       <PopoverTrigger asChild>
                         <Button
                           variant={"outline"}
@@ -208,7 +222,7 @@ export const StudentDialog: React.FC<StudentDialogProps> = ({
                         >
                           <CalendarIcon className="mr-2 h-4 w-4" />
                           {field.value ? (
-                              format(field.value, "PPP", { locale: ptBR })
+                            format(field.value, "PPP", { locale: ptBR })
                           ) : (
                             <span>Selecione uma data</span>
                           )}
@@ -220,7 +234,10 @@ export const StudentDialog: React.FC<StudentDialogProps> = ({
                           captionLayout="dropdown"
                           locale={ptBR}
                           selected={field.value}
-                          onSelect={field.onChange}
+                          onSelect={(date) => {
+                            field.onChange(date);
+                            setIsCalendarOpen(false);
+                          }}
                           disabled={isSubmitting}
                         />
                       </PopoverContent>
@@ -274,46 +291,51 @@ export const StudentDialog: React.FC<StudentDialogProps> = ({
                 </p>
               )}
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="turma" className="text-left">
-                Turma
-              </Label>
-              <Controller
-                name="classroomId"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    value={field.value}
-                    onValueChange={field.onChange}
-                    disabled={isSubmitting || (!isEditMode && !!classroomId)}
-                  >
-                    <SelectTrigger className="col-span-3">
-                      <SelectValue placeholder="Selecione a turma" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {classrooms.map((classroom) => (
-                        <SelectItem
-                          key={classroom.id}
-                          value={classroom.id.toString()}
-                        >
-                          {classroom.nome}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
+            <div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="turma" className="text-left">
+                  Turma
+                </Label>
+                <Controller
+                  name="classroomId"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      disabled={isSubmitting || (!isEditMode && !!classroomId)}
+                    >
+                      <SelectTrigger className="col-span-3">
+                        <SelectValue placeholder="Selecione a turma" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {classrooms.map((classroom) => (
+                          <SelectItem
+                            key={classroom.id}
+                            value={classroom.id.toString()}
+                          >
+                            {classroom.nome}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </div>
+              {errors.classroomId && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.classroomId.message}
+                </p>
+              )}
             </div>
           </div>
-          <DialogFooter>
+          <DialogFooter className="space-y-2">
             <DialogClose asChild>
               <Button type="button" variant="outline" disabled={isSubmitting}>
-                <Ban className="mr-2 h-4 w-4" />
                 Cancelar
               </Button>
             </DialogClose>
             <Button type="submit" disabled={isSubmitting}>
-              <Save className="mr-2 h-4 w-4" />
               {isSubmitting ? "Salvando..." : "Salvar"}
             </Button>
           </DialogFooter>

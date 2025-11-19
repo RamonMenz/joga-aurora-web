@@ -1,4 +1,3 @@
-// src/components/Container.tsx
 import React from "react";
 
 type ContainerProps = {

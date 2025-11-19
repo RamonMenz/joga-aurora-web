@@ -29,6 +29,7 @@ import bodyMeasurementService from "@/api/services/bodyMeasurementService";
 import type { Student } from "@/types/student";
 import type { BodyMeasurement } from "@/types/bodyMeasurement";
 import { StudentDataValidationDialog } from "@/components/student/student-data-validation-dialog";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 interface BodyMeasurementDialogProps {
   student: Student;
@@ -67,6 +68,7 @@ export const BodyMeasurementDialog: React.FC<BodyMeasurementDialogProps> = ({
   children,
 }) => {
   const [open, setOpen] = useState(false);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const {
     control,
     register,
@@ -166,7 +168,10 @@ export const BodyMeasurementDialog: React.FC<BodyMeasurementDialogProps> = ({
                     name="collectionDate"
                     control={control}
                     render={({ field }) => (
-                      <Popover>
+                      <Popover
+                        open={isCalendarOpen}
+                        onOpenChange={setIsCalendarOpen}
+                      >
                         <PopoverTrigger asChild>
                           <Button
                             variant={"outline"}
@@ -190,7 +195,10 @@ export const BodyMeasurementDialog: React.FC<BodyMeasurementDialogProps> = ({
                             captionLayout="dropdown"
                             locale={ptBR}
                             selected={field.value}
-                            onSelect={field.onChange}
+                            onSelect={(date) => {
+                              field.onChange(date);
+                              setIsCalendarOpen(false);
+                            }}
                             disabled={isSubmitting}
                           />
                         </PopoverContent>
@@ -256,13 +264,16 @@ export const BodyMeasurementDialog: React.FC<BodyMeasurementDialogProps> = ({
                   />
                 </div>
                 {errors.waist && (
-                  <p className="text-sm text-red-500">
-                    {errors.waist.message}
-                  </p>
+                  <p className="text-sm text-red-500">{errors.waist.message}</p>
                 )}
               </div>
             </div>
             <DialogFooter>
+              <DialogClose asChild>
+                <Button type="button" variant="outline" disabled={isSubmitting}>
+                  Cancelar
+                </Button>
+              </DialogClose>
               <Button type="submit" disabled={isSubmitting}>
                 {isSubmitting ? "Salvando..." : "Salvar"}
               </Button>

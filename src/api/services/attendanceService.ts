@@ -1,5 +1,6 @@
 import api from "@/api/axios";
 import type { Attendance } from "@/types/attendance";
+import { formatDateOnly } from "@/util/date";
 
 const attendanceService = {
   getAllAttendanceByClassroomAndDate: async (
@@ -55,16 +56,13 @@ const attendanceService = {
     startDate: Date,
     endDate: Date
   ) => {
-    const { data } = await api.get(
-      `/attendances/turma/${classroomId}/relatorio`,
-      {
-        params: {
-          dataInicial: startDate.toISOString().split("T")[0],
-          dataFinal: endDate.toISOString().split("T")[0],
-        },
-        responseType: "blob",
-      }
-    );
+    const { data } = await api.get(`/attendances/turma/${classroomId}/relatorio`, {
+      params: {
+        dataInicial: formatDateOnly(startDate),
+        dataFinal: formatDateOnly(endDate),
+      },
+      responseType: "blob",
+    });
     return data;
   },
 };

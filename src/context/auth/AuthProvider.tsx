@@ -1,9 +1,11 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState, useCallback, useMemo, type ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
-import { Spinner } from "@/components/ui/spinner";
+import { PageLoader } from "@/components/common/page-loader";
 import type { ApiError } from "@/types/apiError";
 import type { User } from "@/types/user";
 import authService from "@/api/services/authService";
+import { ROUTES } from "@/util/constants";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -13,7 +15,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const login = async (username: string, password: string) => {
+  const navigate = useNavigate();
+
+  const login = useCallback(async (username: string, password: string) => {
     setLoading(true);
     try {
       const response = await authService.login(username, password);
@@ -24,13 +28,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const logout = async () => {
-    await authService.logout();
-    setUser(null);
-    // window.location.reload();
-  };
+  const logout = useCallback(async () => {
+    try {
+      await authService.logout();
+    } catch (err) {
+      if (import.meta.env.DEV) {
+        console.error("Erro ao realizar logout:", err);
+      }
+    } finally {
+      setUser(null);
+      navigate(ROUTES.LOGIN);
+    }
+  }, [navigate]);
 
   useEffect(() => {
     async function checkAuthenticated() {
@@ -40,33 +51,40 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setUser(response.data);
       } catch (err) {
         setUser(null);
-        return { error: err as ApiError };
+        if (import.meta.env.DEV) {
+          console.error("Erro ao verificar autenticação:", err);
+        }
       } finally {
         setLoading(false);
       }
     }
-
     checkAuthenticated();
   }, []);
 
+  // Ouve eventos globais disparados pelo interceptor para 401
+  useEffect(() => {
+    const onUnauthorized = () => {
+      setUser(null);
+      navigate(ROUTES.LOGIN);
+    };
+    window.addEventListener("auth:unauthorized", onUnauthorized);
+    return () => window.removeEventListener("auth:unauthorized", onUnauthorized);
+  }, [navigate]);
+
+  const value = useMemo(() => ({
+    user,
+    setUser,
+    isAuthenticated: !!user,
+    login,
+    logout,
+  }), [user, login, logout]);
+
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <Spinner />
-      </div>
-    );
+    return <PageLoader className="h-screen" message="Verificando autenticação..." />;
   }
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        setUser,
-        isAuthenticated: !!user,
-        login,
-        logout,
-      }}
-    >
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

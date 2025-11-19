@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
-
 import {
   Select,
   SelectContent,
@@ -26,21 +25,25 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import classroomService from "@/api/services/classroomService";
-import type { Classroom } from "@/types/classroom";
+import { useClassrooms } from "@/context/classroom/useClassroom";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/common/container";
+import { VALIDATION, TOAST_MESSAGES, ROUTES } from "@/util/constants";
 
 const formSchema = z.object({
   nome: z
     .string()
-    .min(1, "O nome da turma é obrigatório")
-    .max(32, "O nome da turma deve ter no máximo 32 caracteres"),
+    .min(VALIDATION.CLASSROOM_NAME.MIN_LENGTH, "O nome da turma é obrigatório")
+    .max(
+      VALIDATION.CLASSROOM_NAME.MAX_LENGTH,
+      `O nome da turma deve ter no máximo ${VALIDATION.CLASSROOM_NAME.MAX_LENGTH} caracteres`
+    ),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
 export const ClassroomsPage: React.FC = () => {
-  const [classrooms, setClassrooms] = useState<Classroom[]>([]);
+  const { classrooms, loadClassrooms } = useClassrooms();
   const [selectedClassroom, setSelectedClassroom] = useState<string>();
   const navigate = useNavigate();
 
@@ -52,34 +55,25 @@ export const ClassroomsPage: React.FC = () => {
     resolver: zodResolver(formSchema),
   });
 
-  useEffect(() => {
-    fetchClassrooms();
-  }, []);
-
-  const fetchClassrooms = () => {
-    classroomService
-      .getAll({ page: 0, size: 100 })
-      .then((data) => setClassrooms(data.content));
-  };
-
-  const handleNavigate = () => {
+  const handleNavigate = useCallback(() => {
     if (selectedClassroom) {
-      navigate(`/turmas/${selectedClassroom}`);
+      navigate(ROUTES.CLASSROOM_DETAILS(selectedClassroom));
     }
-  };
+  }, [selectedClassroom, navigate]);
 
-  const onSubmit = async (data: FormValues) => {
+  const onSubmit = useCallback(async (data: FormValues) => {
     toast.promise(classroomService.insert(data.nome), {
-      loading: "Criando turma...",
+      loading: TOAST_MESSAGES.LOADING.CREATING,
       success: (newClassroom) => {
-        navigate(`/turmas/${newClassroom.id}`);
-        return "Turma criada com sucesso!";
+        void loadClassrooms();
+        navigate(ROUTES.CLASSROOM_DETAILS(newClassroom.id));
+        return TOAST_MESSAGES.SUCCESS.CLASSROOM_CREATED;
       },
       error: (error) => {
-        return error.response?.data?.message || "Erro ao criar turma.";
+        return error.response?.data?.message || TOAST_MESSAGES.ERROR.CLASSROOM_CREATE;
       },
     });
-  };
+  }, [loadClassrooms, navigate]);
 
   return (
     <Container className="px-2">
@@ -104,7 +98,7 @@ export const ClassroomsPage: React.FC = () => {
                   onValueChange={setSelectedClassroom}
                   value={selectedClassroom}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger aria-label="Selecionar turma">
                     <SelectValue placeholder="Selecione uma turma" />
                   </SelectTrigger>
                   <SelectContent>
@@ -146,6 +140,8 @@ export const ClassroomsPage: React.FC = () => {
                     id="nome"
                     {...register("nome")}
                     placeholder="Ex: Terceiro Ano"
+                    aria-invalid={!!errors.nome}
+                    aria-describedby={errors.nome ? "nome-error" : undefined}
                   />
                   {errors.nome && (
                     <p className="text-sm text-red-500">
@@ -155,8 +151,8 @@ export const ClassroomsPage: React.FC = () => {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? "Criando..." : "Criar Turma"}
+                <Button type="submit" disabled={isSubmitting} aria-busy={isSubmitting}>
+                  {isSubmitting ? TOAST_MESSAGES.LOADING.CREATING : "Criar Turma"}
                 </Button>
               </CardFooter>
             </form>

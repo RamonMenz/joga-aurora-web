@@ -1,12 +1,12 @@
 // src/pages/ClassroomDetails/ClassroomHeader.tsx
 import { CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useClassroom } from "@/context/classroom/useClassroom";
 import { useNavigate } from "react-router-dom";
 import { ClipboardCheck, UserPlus } from "lucide-react";
 import { StudentDialog } from "@/components/student/student-dialog";
 import { UpdateClassroomDialog } from "@/components/classroom/update-classroom-dialog";
 import { DeleteClassroomDialog } from "@/components/classroom/delete-classroom-dialog";
+import useClassrooms from "@/context/classroom/useClassroom";
 
 interface ClassroomHeaderProps {
   isAttendanceMode: boolean;
@@ -27,7 +27,7 @@ export const ClassroomHeader: React.FC<ClassroomHeaderProps> = ({
   onCancelAttendance,
   onSaveAttendance,
 }) => {
-  const { classroom, fetchClassroomData } = useClassroom();
+  const { classroom, loadClassroom } = useClassrooms();
   const navigate = useNavigate();
 
   if (!classroom) {
@@ -52,7 +52,7 @@ export const ClassroomHeader: React.FC<ClassroomHeaderProps> = ({
             <div className="flex flex-wrap gap-2 justify-end">
               <StudentDialog
                 classroomId={id}
-                onSuccess={fetchClassroomData}
+                onSuccess={loadClassroom}
                 trigger={
                   <Button variant={"outline"}>
                     <UserPlus className="mr-2 h-4 w-4" />
@@ -63,7 +63,7 @@ export const ClassroomHeader: React.FC<ClassroomHeaderProps> = ({
               <UpdateClassroomDialog
                 classroomId={id}
                 classroomName={nome}
-                onClassroomUpdated={fetchClassroomData}
+                onClassroomUpdated={loadClassroom}
               />
             </div>
             <div className="flex flex-wrap gap-2 justify-end pl-9">

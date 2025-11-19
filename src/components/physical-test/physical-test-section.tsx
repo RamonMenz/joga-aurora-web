@@ -5,7 +5,7 @@ import {
 } from "@/components/ui/carousel";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Pencil } from "lucide-react";
+import { Pencil, PlusCircleIcon } from "lucide-react";
 import { PhysicalTestDialog } from "./physical-test-dialog";
 import { DeletePhysicalTestDialog } from "./delete-physical-test-dialog";
 import type { Student } from "@/types/student";
@@ -28,7 +28,9 @@ export const PhysicalTestSection: React.FC<PhysicalTestSectionProps> = ({
           student={student}
           onPhysicalTestChange={onDataChanged}
         >
-          <Button>Adicionar Teste</Button>
+          <Button size="icon">
+            <PlusCircleIcon />
+          </Button>
         </PhysicalTestDialog>
       </div>
       {student.testes_fisicos && student.testes_fisicos.length > 0 ? (
@@ -61,7 +63,7 @@ export const PhysicalTestSection: React.FC<PhysicalTestSectionProps> = ({
                             physicalTest={teste}
                             onPhysicalTestChange={onDataChanged}
                           >
-                            <Button variant="ghost" size="icon">
+                            <Button variant="outline" size="icon">
                               <Pencil className="h-4 w-4" />
                             </Button>
                           </PhysicalTestDialog>

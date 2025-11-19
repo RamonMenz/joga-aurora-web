@@ -1,13 +1,12 @@
-// src/context/classroom/useClassroomContext.ts
 import { useContext } from "react";
-import { ClassroomContext } from "./ClassroomContext";
+import { ClassroomsContext } from "./ClassroomContext";
 
-export const useClassroom = () => {
-  const context = useContext(ClassroomContext);
+export const useClassrooms = () => {
+  const context = useContext(ClassroomsContext);
   if (!context) {
-    throw new Error(
-      "useClassroomContext must be used within a ClassroomProvider"
-    );
+    throw new Error("useClassrooms must be used within a ClassroomsProvider");
   }
   return context;
 };
+
+export default useClassrooms;

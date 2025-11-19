@@ -26,12 +26,12 @@ export const DeletePhysicalTestDialog: React.FC<
     const promise = physicalTestService.delete(physicalTestId);
 
     toast.promise(promise, {
-      loading: "Deletando teste físico...",
+      loading: "Excluindo teste físico...",
       success: () => {
         onPhysicalTestDeleted();
-        return "Teste físico deletado com sucesso!";
+        return "Teste físico excluído com sucesso!";
       },
-      error: "Erro ao deletar teste físico.",
+      error: "Erro ao excluir teste físico.",
     });
   };
 
@@ -46,13 +46,13 @@ export const DeletePhysicalTestDialog: React.FC<
         <AlertDialogHeader>
           <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
           <AlertDialogDescription>
-            Essa ação não pode ser desfeita. Isso irá deletar permanentemente o
+            Essa ação não pode ser desfeita. Isso irá excluir permanentemente o
             teste físico.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete}>Deletar</AlertDialogAction>
+          <AlertDialogAction onClick={handleDelete}>Excluir</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

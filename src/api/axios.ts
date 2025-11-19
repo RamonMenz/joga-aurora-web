@@ -1,28 +1,35 @@
 import axios, { type AxiosError, type AxiosResponse } from "axios";
-
-const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:8080";
+import { API_CONFIG } from "@/util/constants";
 
 const api = axios.create({
-  baseURL: API_BASE,
+  baseURL: API_CONFIG.BASE_URL,
+  timeout: API_CONFIG.TIMEOUT,
   withCredentials: true,
 });
 
 api.interceptors.response.use(
   (response: AxiosResponse) => {
-    // console.log("API Response:", response);
     return response;
   },
   (error: AxiosError) => {
-    // TODO: Adicionar toasts para feedback de erro
     if (error.response) {
-      // console.error("API Error:", error.response);
-      if (error.response.status === 401) {
-        // Redirecionar para o login se não estiver autenticado
-        // window.location.href = "/login";
+      const status = error.response.status;
+      if (status === 401 && !window.location.pathname.includes('/login')) {
+        // Dispara evento global; AuthProvider lida com navegação
+        window.dispatchEvent(new CustomEvent('auth:unauthorized'));
+      }
+      if (import.meta.env.DEV) {
+        console.error("API Error:", {
+          status,
+          data: error.response.data,
+          url: error.config?.url,
+        });
       }
     } else if (error.request) {
-      console.error("Network Error:", error.request);
-    } else {
+      if (import.meta.env.DEV) {
+        console.error("Network Error:", error.message);
+      }
+    } else if (import.meta.env.DEV) {
       console.error("Error:", error.message);
     }
     return Promise.reject(error);

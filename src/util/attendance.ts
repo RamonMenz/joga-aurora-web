@@ -1,11 +1,7 @@
-import type {
-  AttendanceStatus,
-  RequestAttendanceStatus,
-} from "@/types/attendance";
+import type { AttendanceStatus, RequestAttendanceStatus } from "@/types/attendance";
 
-export const toFrontendStatus = (
-  status: RequestAttendanceStatus
-): AttendanceStatus => {
+// Mapeia código do backend (P/L/A) para label de UI
+export const toFrontendStatus = (status: RequestAttendanceStatus): AttendanceStatus => {
   switch (status) {
     case "P":
       return "Presente";
@@ -14,13 +10,12 @@ export const toFrontendStatus = (
     case "A":
       return "Ausente";
     default:
-      return "Presente";
+      return "Presente"; // fallback seguro
   }
 };
 
-export const toBackendStatus = (
-  status: AttendanceStatus
-): RequestAttendanceStatus => {
+// Mapeia label de UI para código esperado pelo backend
+export const toBackendStatus = (status: AttendanceStatus): RequestAttendanceStatus => {
   switch (status) {
     case "Presente":
       return "P";
@@ -28,5 +23,7 @@ export const toBackendStatus = (
       return "L";
     case "Ausente":
       return "A";
+    default:
+      return "P"; // fallback evita undefined
   }
 };

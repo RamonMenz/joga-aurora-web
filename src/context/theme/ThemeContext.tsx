@@ -7,15 +7,10 @@ export type ThemeProviderProps = {
   storageKey?: string;
 };
 
-type ThemeProviderState = {
+export type ThemeProviderState = {
   theme: Theme;
   setTheme: (theme: Theme) => void;
 };
 
-const initialState: ThemeProviderState = {
-  theme: "system",
-  setTheme: () => null,
-};
-
-export const ThemeProviderContext =
-  createContext<ThemeProviderState>(initialState);
+// Context criado como undefined para detectar uso fora do provider
+export const ThemeProviderContext = createContext<ThemeProviderState | undefined>(undefined);

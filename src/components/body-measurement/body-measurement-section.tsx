@@ -5,7 +5,7 @@ import {
 } from "@/components/ui/carousel";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Pencil } from "lucide-react";
+import { Pencil, PlusCircleIcon } from "lucide-react";
 import { DeleteBodyMeasurementDialog } from "./delete-body-measurement-dialog";
 import type { Student } from "@/types/student";
 import { format } from "date-fns";
@@ -28,7 +28,9 @@ export const BodyMeasurementSection: React.FC<BodyMeasurementSectionProps> = ({
           student={student}
           onBodyMeasurementChange={onDataChanged}
         >
-          <Button>Adicionar Medida</Button>
+          <Button size="icon">
+            <PlusCircleIcon />
+          </Button>
         </BodyMeasurementDialog>
       </div>
       {student.medidas_corporais && student.medidas_corporais.length > 0 ? (
@@ -61,7 +63,7 @@ export const BodyMeasurementSection: React.FC<BodyMeasurementSectionProps> = ({
                             bodyMeasurement={medida}
                             onBodyMeasurementChange={onDataChanged}
                           >
-                            <Button variant="ghost" size="icon">
+                            <Button variant="outline" size="icon">
                               <Pencil className="h-4 w-4" />
                             </Button>
                           </BodyMeasurementDialog>

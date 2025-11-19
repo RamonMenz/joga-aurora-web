@@ -4,13 +4,13 @@ import type { PageableParams } from "@/types/pageableParams";
 import type { Student } from "@/types/student";
 import type { StudentFilter } from "@/types/studentFilter";
 import { format as formatDate } from "date-fns";
+import { formatDateOnly } from "@/util/date";
 
 const studentService = {
   getAll: async (
     pageable?: PageableParams,
     filter?: StudentFilter
   ): Promise<Page<Student>> => {
-    // Ensure date parameters are formatted as yyyy-MM-dd for backend expectations
     const formattedFilter: Record<string, unknown> | undefined = filter
       ? {
           ...filter,
@@ -29,8 +29,7 @@ const studentService = {
         ...formattedFilter,
       },
     });
-    // Some Spring controllers wrap pagination info under a `page` key.
-    // Normalize the payload to the Page<T> interface expected by the UI.
+    
     type RawPageEnvelope<T> = {
       content?: T[];
       totalElements?: number;
@@ -47,6 +46,7 @@ const studentService = {
         number?: number;
       };
     };
+    
     const raw = response.data as unknown as RawPageEnvelope<Student>;
     const normalized: Page<Student> = {
       content: raw.content ?? [],
@@ -91,7 +91,7 @@ const studentService = {
   ): Promise<Student> => {
     const response = await api.post(`/estudante`, {
       nome: name,
-      data_nascimento: birthDate,
+      data_nascimento: formatDateOnly(birthDate),
       genero: gender,
       turma: { id: classroomId },
     });
@@ -107,7 +107,7 @@ const studentService = {
   ): Promise<Student> => {
     const response = await api.put(`/estudante/${id}`, {
       nome: name,
-      data_nascimento: birthDate,
+      data_nascimento: formatDateOnly(birthDate),
       genero: gender,
       turma: { id: classroomId },
     });

@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { TrashIcon } from "lucide-react";
 import classroomService from "@/api/services/classroomService";
 import { toast } from "sonner";
+import { useClassrooms } from "@/context/classroom/useClassroom";
 import type { Classroom } from "@/types/classroom";
 
 interface DeleteClassroomDialogProps {
@@ -26,6 +27,7 @@ export const DeleteClassroomDialog: React.FC<DeleteClassroomDialogProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const { loadClassrooms } = useClassrooms();
 
   const hasStudents = classroom.estudantes && classroom.estudantes.length > 0;
 
@@ -39,6 +41,8 @@ export const DeleteClassroomDialog: React.FC<DeleteClassroomDialogProps> = ({
     toast.promise(promise, {
       loading: "Excluindo turma...",
       success: () => {
+        // Refresh global classrooms list, then call the callback
+        void loadClassrooms();
         onClassroomDeleted();
         setIsOpen(false);
         navigate("/turmas");

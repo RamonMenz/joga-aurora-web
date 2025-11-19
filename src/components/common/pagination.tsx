@@ -1,3 +1,4 @@
+import { memo, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
@@ -17,14 +18,13 @@ interface CustomPaginationProps {
   onPageSizeChange?: (size: number) => void;
 }
 
-export const CustomPagination: React.FC<CustomPaginationProps> = ({
+export const CustomPagination = memo<CustomPaginationProps>(function CustomPagination({
   totalPages,
   currentPage,
   pageSize,
   onPageChange,
   onPageSizeChange,
-}) => {
-  // Normalize values to ensure the control always renders at least one page
+}) {
   const totalPagesNum = Number(totalPages);
   const currentPageNum = Number(currentPage);
   const safeTotalPages = Number.isFinite(totalPagesNum) && totalPagesNum > 0 ? totalPagesNum : 1;
@@ -36,6 +36,26 @@ export const CustomPagination: React.FC<CustomPaginationProps> = ({
   const canPrev = safeCurrentPage > 0;
   const canNext = safeCurrentPage < safeTotalPages - 1;
 
+  const handlePageSizeChange = useCallback((value: string) => {
+    onPageSizeChange?.(Number(value));
+  }, [onPageSizeChange]);
+
+  const handleFirstPage = useCallback(() => {
+    onPageChange(0);
+  }, [onPageChange]);
+
+  const handlePrevPage = useCallback(() => {
+    onPageChange(Math.max(0, safeCurrentPage - 1));
+  }, [onPageChange, safeCurrentPage]);
+
+  const handleNextPage = useCallback(() => {
+    onPageChange(Math.min(safeTotalPages - 1, safeCurrentPage + 1));
+  }, [onPageChange, safeTotalPages, safeCurrentPage]);
+
+  const handleLastPage = useCallback(() => {
+    onPageChange(safeTotalPages - 1);
+  }, [onPageChange, safeTotalPages]);
+
   return (
     <div className="flex items-center justify-between px-4">
       <div className="text-muted-foreground hidden flex-1 text-sm lg:flex" />
@@ -46,7 +66,7 @@ export const CustomPagination: React.FC<CustomPaginationProps> = ({
           </Label>
           <Select
             value={`${pageSize}`}
-            onValueChange={(value) => onPageSizeChange?.(Number(value))}
+            onValueChange={handlePageSizeChange}
           >
             <SelectTrigger className="w-20" id="rows-per-page">
               <SelectValue placeholder={pageSize} />
@@ -69,48 +89,48 @@ export const CustomPagination: React.FC<CustomPaginationProps> = ({
           <Button
             variant="outline"
             className="hidden h-8 w-8 p-0 lg:flex"
-            onClick={() => onPageChange(0)}
+            onClick={handleFirstPage}
             disabled={!canPrev}
-            aria-label="Go to first page"
+            aria-label="Ir para primeira página"
           >
-            <span className="sr-only">Go to first page</span>
+            <span className="sr-only">Ir para primeira página</span>
             <ChevronsLeft className="h-4 w-4" />
           </Button>
           <Button
             variant="outline"
             className="size-8"
             size="icon"
-            onClick={() => onPageChange(Math.max(0, safeCurrentPage - 1))}
+            onClick={handlePrevPage}
             disabled={!canPrev}
-            aria-label="Go to previous page"
+            aria-label="Ir para página anterior"
           >
-            <span className="sr-only">Go to previous page</span>
+            <span className="sr-only">Ir para página anterior</span>
             <ChevronLeft className="h-4 w-4" />
           </Button>
           <Button
             variant="outline"
             className="size-8"
             size="icon"
-            onClick={() => onPageChange(Math.min(safeTotalPages - 1, safeCurrentPage + 1))}
+            onClick={handleNextPage}
             disabled={!canNext}
-            aria-label="Go to next page"
+            aria-label="Ir para próxima página"
           >
-            <span className="sr-only">Go to next page</span>
+            <span className="sr-only">Ir para próxima página</span>
             <ChevronRight className="h-4 w-4" />
           </Button>
           <Button
             variant="outline"
             className="hidden size-8 lg:flex"
             size="icon"
-            onClick={() => onPageChange(safeTotalPages - 1)}
+            onClick={handleLastPage}
             disabled={!canNext}
-            aria-label="Go to last page"
+            aria-label="Ir para última página"
           >
-            <span className="sr-only">Go to last page</span>
+            <span className="sr-only">Ir para última página</span>
             <ChevronsRight className="h-4 w-4" />
           </Button>
         </div>
       </div>
     </div>
   );
-};
+});

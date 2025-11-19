@@ -26,12 +26,12 @@ export const DeleteBodyMeasurementDialog: React.FC<
     const promise = bodyMeasurementService.delete(bodyMeasurementId);
 
     toast.promise(promise, {
-      loading: "Deletando medida corporal...",
+      loading: "Excluindo medida corporal...",
       success: () => {
         onBodyMeasurementDeleted();
-        return "Medida corporal deletada com sucesso!";
+        return "Medida corporal excluída com sucesso!";
       },
-      error: "Erro ao deletar medida corporal.",
+      error: "Erro ao excluir medida corporal.",
     });
   };
 
@@ -46,13 +46,13 @@ export const DeleteBodyMeasurementDialog: React.FC<
         <AlertDialogHeader>
           <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
           <AlertDialogDescription>
-            Essa ação não pode ser desfeita. Isso irá deletar permanentemente a
+            Essa ação não pode ser desfeita. Isso irá excluir permanentemente a
             medida corporal.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete}>Deletar</AlertDialogAction>
+          <AlertDialogAction onClick={handleDelete}>Excluir</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
