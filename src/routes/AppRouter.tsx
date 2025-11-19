@@ -21,6 +21,7 @@ export const AppRouter: React.FC = () => {
         <Suspense fallback={<PageLoader message="Carregando página..." />}>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/saiba-mais/publico" element={<DocumentationPage />} />
 
             <Route element={<PrivateRoute />}>
               <Route path="/" element={<HomePage />} />
