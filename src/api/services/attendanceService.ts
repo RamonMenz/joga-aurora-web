@@ -1,13 +1,13 @@
 import api from "@/api/axios";
+import { API_ENDPOINTS } from "@/util/constants";
 import type { Attendance } from "@/types/attendance";
-import { formatDateOnly } from "@/util/date";
 
 const attendanceService = {
   getAllAttendanceByClassroomAndDate: async (
     classroomId: string,
     attendanceDate: string | null
   ): Promise<Attendance[]> => {
-    const response = await api.get(`/presenca/turma/${classroomId}`, {
+    const response = await api.get(API_ENDPOINTS.ATTENDANCE.BY_CLASSROOM(classroomId), {
       params: { data_presenca: attendanceDate },
     });
     return response.data;
@@ -19,7 +19,7 @@ const attendanceService = {
     attendances: Attendance[]
   ): Promise<Attendance[]> => {
     const response = await api.post(
-      `/presenca/turma/${classroomId}`,
+      API_ENDPOINTS.ATTENDANCE.BY_CLASSROOM(classroomId),
       attendances,
       {
         params: { data_presenca: attendanceDate },
@@ -34,7 +34,7 @@ const attendanceService = {
     attendances: Attendance[]
   ): Promise<Attendance[]> => {
     const response = await api.put(
-      `/presenca/turma/${classroomId}`,
+      API_ENDPOINTS.ATTENDANCE.BY_CLASSROOM(classroomId),
       attendances,
       {
         params: { data_presenca: attendanceDate },
@@ -45,26 +45,12 @@ const attendanceService = {
 
   saveAll: async (attendances: Attendance[]) => {
     const { data } = await api.post<Attendance[]>(
-      "/attendances",
+      API_ENDPOINTS.ATTENDANCE.BASE,
       attendances
     );
     return data;
   },
 
-  getAttendancesReport: async (
-    classroomId: string,
-    startDate: Date,
-    endDate: Date
-  ) => {
-    const { data } = await api.get(`/attendances/turma/${classroomId}/relatorio`, {
-      params: {
-        dataInicial: formatDateOnly(startDate),
-        dataFinal: formatDateOnly(endDate),
-      },
-      responseType: "blob",
-    });
-    return data;
-  },
 };
 
 export default attendanceService;

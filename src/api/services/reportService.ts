@@ -1,16 +1,30 @@
 import api from "../axios";
+import { API_ENDPOINTS } from "@/util/constants";
+import { formatDateOnly } from "@/util/date";
 
-const getAttendancesReport = async (classroomId: string, startDate: Date, endDate: Date) => {
-    const { data } = await api.get(`/presenca/turma/${classroomId}/relatorio`, {
+const getAttendanceReport = async (classroomId: string, startDate: Date, endDate: Date) => {
+    const { data } = await api.get(API_ENDPOINTS.REPORTS.ATTENDANCE_BY_CLASSROOM(classroomId), {
         params: {
-            dataInicial: startDate.toISOString().split('T')[0],
-            dataFinal: endDate.toISOString().split('T')[0],
+            dataInicial: formatDateOnly(startDate),
+            dataFinal: formatDateOnly(endDate),
         },
-        responseType: 'blob',
+        responseType: "blob",
+    });
+    return data;
+};
+
+const getStudentsReport = async (classroomId: string, startDate: Date, endDate: Date) => {
+    const { data } = await api.get(API_ENDPOINTS.REPORTS.STUDENTS_BY_CLASSROOM(classroomId), {
+        params: {
+            dataInicial: formatDateOnly(startDate),
+            dataFinal: formatDateOnly(endDate),
+        },
+        responseType: "blob",
     });
     return data;
 };
 
 export const reportService = {
-    getAttendancesReport,
+    getAttendanceReport,
+    getStudentsReport,
 };

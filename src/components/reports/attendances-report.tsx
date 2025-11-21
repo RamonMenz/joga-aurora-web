@@ -69,7 +69,7 @@ export function AttendancesReport() {
 
   const onSubmit = async (values: FormValues) => {
     toast.promise(
-      reportService.getAttendancesReport(
+      reportService.getAttendanceReport(
         values.classroomId,
         values.startDate,
         values.endDate

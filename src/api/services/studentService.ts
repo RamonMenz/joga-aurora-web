@@ -1,4 +1,5 @@
 import api from "@/api/axios";
+import { API_ENDPOINTS } from "@/util/constants";
 import type { Page } from "@/types/page";
 import type { PageableParams } from "@/types/pageableParams";
 import type { Student } from "@/types/student";
@@ -23,7 +24,7 @@ const studentService = {
         }
       : undefined;
 
-    const response = await api.get<Page<Student>>("/estudante", {
+    const response = await api.get<Page<Student>>(API_ENDPOINTS.STUDENTS.BASE, {
       params: {
         ...pageable,
         ...formattedFilter,
@@ -79,7 +80,7 @@ const studentService = {
   },
 
   getById: async (id: string): Promise<Student> => {
-    const response = await api.get(`/estudante/${id}`);
+    const response = await api.get(API_ENDPOINTS.STUDENTS.BY_ID(id));
     return response.data;
   },
 
@@ -89,7 +90,7 @@ const studentService = {
     gender: "M" | "F" | "N",
     classroomId: string
   ): Promise<Student> => {
-    const response = await api.post(`/estudante`, {
+    const response = await api.post(API_ENDPOINTS.STUDENTS.BASE, {
       nome: name,
       data_nascimento: formatDateOnly(birthDate),
       genero: gender,
@@ -105,7 +106,7 @@ const studentService = {
     gender: "M" | "F" | "N",
     classroomId: string
   ): Promise<Student> => {
-    const response = await api.put(`/estudante/${id}`, {
+    const response = await api.put(API_ENDPOINTS.STUDENTS.BY_ID(id), {
       nome: name,
       data_nascimento: formatDateOnly(birthDate),
       genero: gender,
@@ -115,7 +116,7 @@ const studentService = {
   },
 
   delete: async (id: string): Promise<void> => {
-    await api.delete(`/estudante/${id}`);
+    await api.delete(API_ENDPOINTS.STUDENTS.BY_ID(id));
   },
 };
 

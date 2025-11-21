@@ -3,6 +3,7 @@ import classroomService from "@/api/services/classroomService";
 import attendanceService from "@/api/services/attendanceService";
 import { toast } from "sonner";
 import { ClassroomsContext } from "./ClassroomContext";
+import { ROUTES } from "@/util/constants";
 import type { Classroom } from "@/types/classroom";
 import type { Attendance } from "@/types/attendance";
 import { useAuth } from "../auth/useAuth";
@@ -49,7 +50,7 @@ export const ClassroomsProvider: React.FC<ClassroomsProviderProps> = ({ children
   const getCurrentClassroomIdFromUrl = useCallback((): string | null => {
     try {
       const path = window.location.pathname;
-      const match = path.match(/^\/turmas\/([^/?#]+)/);
+      const match = path.match(new RegExp(`^${ROUTES.CLASSROOMS}/([^/?#]+)`));
       return match?.[1] ?? null;
     } catch {
       return null;

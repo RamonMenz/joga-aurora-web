@@ -44,15 +44,20 @@ export const API_ENDPOINTS = {
   },
   ATTENDANCE: {
     BASE: '/presenca',
+    BY_CLASSROOM: (classroomId: string) => `/presenca/turma/${classroomId}`,
   },
   BODY_MEASUREMENTS: {
-    BASE: '/medidas-corporais',
+    BASE: '/medida-corporal',
+    BY_ID: (id: string) => `/medida-corporal/${id}`,
   },
   PHYSICAL_TESTS: {
-    BASE: '/testes-fisicos',
+    BASE: '/teste-fisico',
+    BY_ID: (id: string) => `/teste-fisico/${id}`,
   },
   REPORTS: {
-    BASE: '/relatorios',
+    BASE: '/relatorio', // atualizado para singular conforme nova API
+    ATTENDANCE_BY_CLASSROOM: (classroomId: string) => `/relatorio/presenca/turma/${classroomId}`,
+    STUDENTS_BY_CLASSROOM: (classroomId: string) => `/relatorio/estudantes/turma/${classroomId}`,
   },
 } as const;
 

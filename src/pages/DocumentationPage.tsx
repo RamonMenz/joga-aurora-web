@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/accordion";
 import { Container } from "@/components/common/container";
 import { Book, Target, Compass, Layers, ListChecks, Lightbulb, HelpCircle } from "lucide-react";
+import { ROUTES } from "@/util/constants";
 
 interface SectionDef {
   key: string;
@@ -37,7 +38,7 @@ const sections: SectionDef[] = [
     key: "navegacao",
     icon: <Layers className="h-5 w-5 text-primary" />,
     title: "4. Navegação",
-    body: `Barra superior:\n- Sair: termina a sessão.\n- Início: volta ao começo.\n- Voltar: retorna para a página anterior.\n- Tema: alterna claro/escuro.\n\nPágina Inicial:\n- Turmas: listar ou criar turmas.\n- Estudantes: buscar e cadastrar.\n- Relatórios: gerar relatório de presença.\n- Saiba Mais: esta página.\n\nPrincipais caminhos:\n- /turmas\n- /turmas/:id\n- /estudantes\n- /estudantes/:id\n- /relatorios\n- /saiba-mais`,
+    body: `Barra superior:\n- Sair: termina a sessão.\n- Início: volta ao começo.\n- Voltar: retorna para a página anterior.\n- Tema: alterna claro/escuro.\n\nPágina Inicial:\n- Turmas: listar ou criar turmas.\n- Estudantes: buscar e cadastrar.\n- Relatórios: gerar relatório de presença.\n- Saiba Mais: esta página.\n\nPrincipais caminhos:\n- ${ROUTES.CLASSROOMS}\n- ${ROUTES.CLASSROOMS}/:id\n- ${ROUTES.STUDENTS}\n- ${ROUTES.STUDENTS}/:id\n- ${ROUTES.REPORTS}\n- ${ROUTES.SAIBA_MAIS}`,
   },
   {
     key: "funcionalidades",

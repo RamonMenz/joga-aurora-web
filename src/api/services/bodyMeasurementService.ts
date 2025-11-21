@@ -1,18 +1,19 @@
 import api from "@/api/axios";
+import { API_ENDPOINTS } from "@/util/constants";
 import type { Page } from "@/types/page";
 import type { PageableParams } from "@/types/pageableParams";
 import type { BodyMeasurement } from "@/types/bodyMeasurement";
 
 const bodyMeasurementService = {
   getAll: async (pageable?: PageableParams): Promise<Page<BodyMeasurement>> => {
-    const response = await api.get<Page<BodyMeasurement>>("/medida-corporal", {
+    const response = await api.get<Page<BodyMeasurement>>(API_ENDPOINTS.BODY_MEASUREMENTS.BASE, {
       params: pageable, // automaticamente converte { page: 1, size: 10 } => ?page=1&size=10
     });
     return response.data;
   },
 
   getById: async (id: string): Promise<BodyMeasurement> => {
-    const response = await api.get(`/medida-corporal/${id}`);
+    const response = await api.get(API_ENDPOINTS.BODY_MEASUREMENTS.BY_ID(id));
     return response.data;
   },
 
@@ -23,7 +24,7 @@ const bodyMeasurementService = {
     weight: number,
     height: number
   ): Promise<BodyMeasurement> => {
-    const response = await api.post(`/medida-corporal`, {
+    const response = await api.post(API_ENDPOINTS.BODY_MEASUREMENTS.BASE, {
       estudante: { id: studentId },
       data_coleta: collectionDate,
       cintura: waist,
@@ -40,7 +41,7 @@ const bodyMeasurementService = {
     weight: number,
     height: number
   ): Promise<BodyMeasurement> => {
-    const response = await api.put(`/medida-corporal/${id}`, {
+    const response = await api.put(API_ENDPOINTS.BODY_MEASUREMENTS.BY_ID(id), {
       data_coleta: collectionDate,
       cintura: waist,
       peso: weight,
@@ -50,7 +51,7 @@ const bodyMeasurementService = {
   },
 
   delete: async (id: string): Promise<void> =>
-    await api.delete(`/medida-corporal/${id}`),
+    await api.delete(API_ENDPOINTS.BODY_MEASUREMENTS.BY_ID(id)),
 };
 
 export default bodyMeasurementService;

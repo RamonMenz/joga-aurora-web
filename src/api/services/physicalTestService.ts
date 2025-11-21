@@ -1,18 +1,19 @@
 import api from "@/api/axios";
+import { API_ENDPOINTS } from "@/util/constants";
 import type { Page } from "@/types/page";
 import type { PageableParams } from "@/types/pageableParams";
 import type { PhysicalTest } from "@/types/physicalTest";
 
 const physicalTestService = {
   getAll: async (pageable?: PageableParams): Promise<Page<PhysicalTest>> => {
-    const response = await api.get<Page<PhysicalTest>>("/teste-fisico", {
+    const response = await api.get<Page<PhysicalTest>>(API_ENDPOINTS.PHYSICAL_TESTS.BASE, {
       params: pageable, // automaticamente converte { page: 1, size: 10 } => ?page=1&size=10
     });
     return response.data;
   },
 
   getById: async (id: string): Promise<PhysicalTest> => {
-    const response = await api.get(`/teste-fisico/${id}`);
+    const response = await api.get(API_ENDPOINTS.PHYSICAL_TESTS.BY_ID(id));
     return response.data;
   },
 
@@ -25,7 +26,7 @@ const physicalTestService = {
     twentyMetersTest: number,
     throwTwoKgTest: number
   ): Promise<PhysicalTest> => {
-    const response = await api.post(`/teste-fisico`, {
+    const response = await api.post(API_ENDPOINTS.PHYSICAL_TESTS.BASE, {
       estudante: { id: studentId },
       data_coleta: collectionDate,
       teste_seis_minutos: sixMinutesTest,
@@ -46,7 +47,7 @@ const physicalTestService = {
     twentyMetersTest: number,
     throwTwoKgTest: number
   ): Promise<PhysicalTest> => {
-    const response = await api.put(`/teste-fisico/${id}`, {
+    const response = await api.put(API_ENDPOINTS.PHYSICAL_TESTS.BY_ID(id), {
       data_coleta: collectionDate,
       teste_seis_minutos: sixMinutesTest,
       teste_flex: flexTest,
@@ -58,7 +59,7 @@ const physicalTestService = {
   },
 
   delete: async (id: string): Promise<void> =>
-    await api.delete(`/teste-fisico/${id}`),
+    await api.delete(API_ENDPOINTS.PHYSICAL_TESTS.BY_ID(id)),
 };
 
 export default physicalTestService;

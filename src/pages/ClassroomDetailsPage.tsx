@@ -1,6 +1,7 @@
 // src/pages/ClassroomDetailsPage.tsx
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { ROUTES } from "@/util/constants";
 import attendanceService from "@/api/services/attendanceService";
 import type { Attendance, AttendanceStatus } from "@/types/attendance";
 import { Card, CardContent } from "@/components/ui/card";
@@ -112,7 +113,7 @@ export const ClassroomDetailsPage: React.FC = () => {
 
   const handleRowClick = (studentId: string) => {
     if (!isAttendanceMode) {
-      navigate(`/estudantes/${studentId}`);
+      navigate(ROUTES.STUDENT_DETAILS(studentId));
     }
   };
 
