@@ -66,14 +66,15 @@ export function StudentsFilterDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent>
+      <DialogContent className="sm:max-w-[720px]">
         <DialogHeader>
           <DialogTitle>Filtros avançados</DialogTitle>
         </DialogHeader>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div className="md:col-span-2">
-            <Label className="mb-1 block">Nascimento (período)</Label>
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+            <div className="rounded-md border bg-muted/30 p-3">
+              <Label className="mb-2 block font-medium">Nascimento (período)</Label>
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
               <div>
                 <Label className="mb-1 block" htmlFor="data_nascimento_ini">
                   Início
@@ -152,11 +153,12 @@ export function StudentsFilterDialog({
                   </PopoverContent>
                 </Popover>
               </div>
+              </div>
             </div>
           </div>
 
           <div>
-            <Label htmlFor="genero">Gênero</Label>
+            <Label htmlFor="genero" className="mb-1 block">Gênero</Label>
             <Controller
               name="genero"
               control={control}
@@ -184,7 +186,7 @@ export function StudentsFilterDialog({
           </div>
 
           <div>
-            <Label htmlFor="turma_id">Turma</Label>
+            <Label htmlFor="turma_id" className="mb-1 block">Turma</Label>
             <Controller
               name="turma_id"
               control={control}

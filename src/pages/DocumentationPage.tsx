@@ -6,7 +6,6 @@ import {
 } from "@/components/ui/accordion";
 import { Container } from "@/components/common/container";
 import { Book, Target, Compass, Layers, ListChecks, Lightbulb, HelpCircle } from "lucide-react";
-import { ROUTES } from "@/util/constants";
 
 interface SectionDef {
   key: string;
@@ -38,13 +37,13 @@ const sections: SectionDef[] = [
     key: "navegacao",
     icon: <Layers className="h-5 w-5 text-primary" />,
     title: "4. Navegação",
-    body: `Barra superior:\n- Sair: termina a sessão.\n- Início: volta ao começo.\n- Voltar: retorna para a página anterior.\n- Tema: alterna claro/escuro.\n\nPágina Inicial:\n- Turmas: listar ou criar turmas.\n- Estudantes: buscar e cadastrar.\n- Relatórios: gerar relatório de presença.\n- Saiba Mais: esta página.\n\nPrincipais caminhos:\n- ${ROUTES.CLASSROOMS}\n- ${ROUTES.CLASSROOMS}/:id\n- ${ROUTES.STUDENTS}\n- ${ROUTES.STUDENTS}/:id\n- ${ROUTES.REPORTS}\n- ${ROUTES.SAIBA_MAIS}`,
+    body: `Barra superior:\n- Sair: termina a sessão.\n- Tema: alterna claro/escuro.\n- Início: volta ao começo.\n- Voltar: retorna para a página anterior.\n\nPágina Inicial:\n- Turmas: listar ou criar turmas.\n- Estudantes: buscar e cadastrar.\n- Relatórios: gerar relatório de presença.\n- Saiba Mais: esta página.`,
   },
   {
     key: "funcionalidades",
     icon: <ListChecks className="h-5 w-5 text-primary" />,
     title: "5. Principais Funcionalidades",
-    body: `Turmas:\n- Criar, abrir, renomear e excluir.\n\nPresença:\n- Registrar ou editar chamada (Presente, Atrasado, Ausente).\n\nEstudantes:\n- Adicionar, editar, excluir, buscar e filtrar.\n\nMedidas Corporais:\n- Registrar peso, estatura, cintura e data.\n\nTestes Físicos:\n- Registrar 6 minutos, Flex, RML, 20 metros e Arremesso 2kg.\n\nRelatórios:\n- Gerar relatório de presença de uma turma em um período.`,
+    body: `Turmas:\n- Criar, abrir, renomear e excluir.\n\nPresença:\n- Registrar ou editar chamada (Presente, Atrasado, Ausente).\n\nEstudantes:\n- Adicionar, editar, excluir, buscar e filtrar.\n\nMedidas Corporais:\n- Registrar peso, estatura, cintura e data.\n\nTestes Físicos:\n- Registrar 6 minutos, Flex, RML, 20 metros e Arremesso 2kg.\n\nRelatórios:\n- Gerar relatório de presença ou estudantes de uma turma em um período.`,
   },
   {
     key: "fluxos",

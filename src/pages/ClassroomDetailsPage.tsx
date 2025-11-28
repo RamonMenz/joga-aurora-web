@@ -88,26 +88,34 @@ export const ClassroomDetailsPage: React.FC = () => {
     );
 
     try {
-      if (classroom.chamada_feita) {
-        await attendanceService.updateAttendanceByClassroomAndDate(
-          classroom.id,
-          null,
-          attendanceList
-        );
-        toast.success("Presença atualizada com sucesso!");
-      } else {
-        await attendanceService.insertAttendanceByClassroomAndDate(
-          classroom.id,
-          null,
-          attendanceList
-        );
-        toast.success("Presença registrada com sucesso!");
-      }
+      await toast.promise(
+        async () => {
+          if (classroom.chamada_feita) {
+            await attendanceService.updateAttendanceByClassroomAndDate(
+              classroom.id,
+              null,
+              attendanceList
+            );
+            return "Presença atualizada com sucesso!";
+          } else {
+            await attendanceService.insertAttendanceByClassroomAndDate(
+              classroom.id,
+              null,
+              attendanceList
+            );
+            return "Presença registrada com sucesso!";
+          }
+        },
+        {
+          loading: "Salvando presença...",
+          success: (msg) => msg,
+          error: "Erro ao salvar presença.",
+        }
+      );
       setIsAttendanceMode(false);
       await loadClassroom();
     } catch (error) {
       console.error("Erro ao salvar presença:", error);
-      toast.error("Erro ao salvar presença.");
     }
   };
 

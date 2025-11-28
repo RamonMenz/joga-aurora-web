@@ -6,6 +6,7 @@ import type { ApiError } from "@/types/apiError";
 import type { User } from "@/types/user";
 import authService from "@/api/services/authService";
 import { ROUTES } from "@/util/constants";
+import systemService from "@/api/services/systemService";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -14,6 +15,7 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [booting, setBooting] = useState<boolean>(true);
 
   const navigate = useNavigate();
 
@@ -44,7 +46,21 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, [navigate]);
 
   useEffect(() => {
-    async function checkAuthenticated() {
+    let cancelled = false;
+    async function bootAndAuth() {
+      try {
+        setBooting(true);
+        // Aguarda backend responder (ou até estourar tentativas)
+        await systemService.waitUntilHealthy({ retries: 6, delayMs: 1000 });
+      } catch {
+        // ignora: segue fluxo mesmo sem health ok
+      } finally {
+        if (!cancelled) {
+          setBooting(false);
+        }
+      }
+
+      if (cancelled) return;
       setLoading(true);
       try {
         const response = await authService.getLoggedInUser();
@@ -55,10 +71,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           console.error("Erro ao verificar autenticação:", err);
         }
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
-    checkAuthenticated();
+    void bootAndAuth();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // Ouve eventos globais disparados pelo interceptor para 401
@@ -78,6 +97,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     login,
     logout,
   }), [user, login, logout]);
+
+  if (booting) {
+    return <PageLoader className="h-screen" message="Iniciando sistema..." />;
+  }
 
   if (loading) {
     return <PageLoader className="h-screen" message="Verificando autenticação..." />;

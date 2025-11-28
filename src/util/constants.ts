@@ -29,6 +29,9 @@ export const ROUTES = {
 } as const;
 
 export const API_ENDPOINTS = {
+  SYSTEM: {
+    HEALTH: '/actuator/health',
+  },
   AUTH: {
     LOGIN: '/login',
     LOGOUT: '/logout',
