@@ -1,4 +1,3 @@
-// src/pages/ClassroomDetailsPage.tsx
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ROUTES } from "@/util/constants";

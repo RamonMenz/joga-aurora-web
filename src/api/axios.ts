@@ -1,11 +1,30 @@
-import axios, { type AxiosError, type AxiosResponse } from "axios";
+import axios, { type AxiosError, type AxiosResponse, type InternalAxiosRequestConfig } from "axios";
 import { API_CONFIG } from "@/util/constants";
+
+const COOKIE_CONSENT_KEY = 'joga-aurora-cookie-consent';
+
+// Função para verificar consentimento
+function hasUserConsent(): boolean {
+  return localStorage.getItem(COOKIE_CONSENT_KEY) === 'true';
+}
 
 const api = axios.create({
   baseURL: API_CONFIG.BASE_URL,
   timeout: API_CONFIG.TIMEOUT,
-  withCredentials: true,
+  withCredentials: false, // Inicia desabilitado
 });
+
+// Interceptor de request para configurar withCredentials dinamicamente
+api.interceptors.request.use(
+  (config: InternalAxiosRequestConfig) => {
+    // Habilita withCredentials apenas se o usuário consentiu
+    config.withCredentials = hasUserConsent();
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 api.interceptors.response.use(
   (response: AxiosResponse) => {
