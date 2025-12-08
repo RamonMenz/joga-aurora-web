@@ -16,6 +16,8 @@ export function useCookieConsent() {
   const grantConsent = () => {
     localStorage.setItem(COOKIE_CONSENT_KEY, 'true');
     setHasConsent(true);
+    // Dispara evento para notificar outras partes da aplicação
+    window.dispatchEvent(new CustomEvent('cookie-consent:granted'));
   };
 
   const revokeConsent = () => {

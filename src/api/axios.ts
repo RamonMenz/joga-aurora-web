@@ -3,10 +3,35 @@ import { API_CONFIG } from "@/util/constants";
 
 const COOKIE_CONSENT_KEY = 'joga-aurora-cookie-consent';
 
+// Cache do estado de consentimento para evitar leituras repetidas do localStorage
+let consentCache: boolean | null = null;
+
 // Função para verificar consentimento
 function hasUserConsent(): boolean {
-  return localStorage.getItem(COOKIE_CONSENT_KEY) === 'true';
+  if (consentCache !== null) {
+    return consentCache;
+  }
+  try {
+    consentCache = localStorage.getItem(COOKIE_CONSENT_KEY) === 'true';
+  } catch (error) {
+    // Fallback se localStorage não estiver disponível
+    console.warn('localStorage não disponível:', error);
+    consentCache = false;
+  }
+  return consentCache;
 }
+
+// Atualiza cache quando consentimento é concedido
+window.addEventListener('cookie-consent:granted', () => {
+  consentCache = true;
+});
+
+// Também monitora mudanças no localStorage (para sincronizar entre abas)
+window.addEventListener('storage', (e) => {
+  if (e.key === COOKIE_CONSENT_KEY) {
+    consentCache = e.newValue === 'true';
+  }
+});
 
 const api = axios.create({
   baseURL: API_CONFIG.BASE_URL,

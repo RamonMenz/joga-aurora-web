@@ -1,14 +1,28 @@
 import { useCookieConsent } from '@/hooks/useCookieConsent';
 import { Button } from '../ui/button';
 import { Cookie } from 'lucide-react';
+import { useState } from 'react';
 
 export function CookieConsentBanner() {
   const { hasConsent, isLoading, grantConsent } = useCookieConsent();
+  const [isAccepting, setIsAccepting] = useState(false);
 
   // Não renderiza nada enquanto carrega ou se já tem consentimento
   if (isLoading || hasConsent) {
     return null;
   }
+
+  const handleAccept = () => {
+    setIsAccepting(true);
+    grantConsent();
+    
+    // Pequeno delay para garantir que o localStorage foi salvo
+    setTimeout(() => {
+      setIsAccepting(false);
+      // Força atualização do estado da aplicação
+      window.location.reload();
+    }, 300);
+  };
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/80">
@@ -26,11 +40,12 @@ export function CookieConsentBanner() {
           </div>
           <div className="flex gap-2 sm:shrink-0">
             <Button
-              onClick={grantConsent}
+              onClick={handleAccept}
               size="sm"
               className="whitespace-nowrap"
+              disabled={isAccepting}
             >
-              Aceitar cookies
+              {isAccepting ? 'Ativando...' : 'Aceitar cookies'}
             </Button>
           </div>
         </div>
