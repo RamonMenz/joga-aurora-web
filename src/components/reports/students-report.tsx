@@ -14,6 +14,7 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TOAST_MESSAGES } from "@/util/constants";
+import { extractFilenameFromHeader } from "@/util/file";
 
 const formSchema = z.object({
   classroomId: z.string().min(1, { message: "Selecione uma turma" }),
@@ -40,11 +41,18 @@ export function StudentsReport() {
     toast.promise(reportService.getStudentsReport(values.classroomId, values.startDate, values.endDate), {
       loading: TOAST_MESSAGES.LOADING.LOADING,
       success: (response) => {
-        const blob = new Blob([response as BlobPart], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+        // IMPORTANTE: O header content-disposition só está acessível se o backend
+        // enviar Access-Control-Expose-Headers: content-disposition
+        const filename = extractFilenameFromHeader(
+          response.headers['content-disposition'],
+          'students_report.xlsx'
+        );
+        
+        const blob = new Blob([response.data as BlobPart], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "students_report.xlsx";
+        a.download = filename;
         document.body.appendChild(a);
         a.click();
         a.remove();
