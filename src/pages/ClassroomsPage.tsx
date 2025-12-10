@@ -44,7 +44,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 export const ClassroomsPage: React.FC = () => {
   const { classrooms, loadClassrooms } = useClassrooms();
-  const [selectedClassroom, setSelectedClassroom] = useState<string>();
+  const [selectedClassroom, setSelectedClassroom] = useState<string>("");
   const navigate = useNavigate();
 
   const {
