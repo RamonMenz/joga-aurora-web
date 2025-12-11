@@ -13,12 +13,6 @@ import { ClassroomHeader } from "@/components/classroom/classroom-header";
 import { EmptyState } from "@/components/common/empty-state";
 import { PageLoader } from "@/components/common/page-loader";
 
-/**
- * @description This is the main page component for displaying the details of a classroom.
- * It has been refactored to use a custom hook (useClassroom) and several sub-components
- * (ClassroomHeader, AttendanceTable, AddStudentDialog) to improve modularity and readability.
- * The core logic is now separated into smaller, more manageable pieces.
- */
 export const ClassroomDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { classroom, isClassroomLoading, attendances, updateAttendanceList, loadClassroom } = useClassrooms();
@@ -27,7 +21,6 @@ export const ClassroomDetailsPage: React.FC = () => {
   const [isAttendanceMode, setIsAttendanceMode] = useState(false);
 
   useEffect(() => {
-    // load based on URL inside provider
     void loadClassroom();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
@@ -35,10 +28,10 @@ export const ClassroomDetailsPage: React.FC = () => {
   const handleStartAttendance = () => {
     if (classroom) {
       if (classroom.chamada_feita) {
-        // If attendance is already done, just enter attendance mode
-        // The existing attendances are already loaded by the hook
+        // Se a chamada já estiver registrada, basta entrar no modo de presença
+        // As presenças existentes já foram carregadas
       } else {
-        // If not, start everyone as 'Presente'
+        // Caso contrário, inicie todos como 'Presente'
         const newAttendances: Attendance[] = classroom.estudantes.map((student) => ({
           id: "",
             estudante: student,

@@ -7,12 +7,6 @@ interface PageLoaderProps {
   fullScreen?: boolean;
 }
 
-/**
- * Componente de loading centralizado para páginas
- * @param message - Mensagem opcional a ser exibida
- * @param className - Classes CSS adicionais
- * @param fullScreen - Se deve ocupar toda a tela (padrão: true)
- */
 export function PageLoader({ 
   message = "Carregando...", 
   className,

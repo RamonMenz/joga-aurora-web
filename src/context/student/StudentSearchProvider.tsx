@@ -57,7 +57,6 @@ export function StudentSearchProvider({ children }: Props) {
   const clear = useCallback(async () => {
     setFilterState(undefined);
     setPage(0);
-    // do not auto fetch here; leave list empty until user searches or first mount happens
     setStudentsPage(undefined);
   }, []);
 

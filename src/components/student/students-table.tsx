@@ -1,4 +1,3 @@
-// src/pages/ClassroomDetails/AttendanceTable.tsx
 import {
   Table,
   TableBody,
@@ -20,12 +19,6 @@ interface AttendanceTableProps {
   onRowClick: (studentId: string) => void;
 }
 
-/**
- * @description A table component for displaying and managing student attendance.
- * @param isAttendanceMode A boolean indicating if the component is in attendance mode.
- * @param onAttendanceChange A callback function to be called when the attendance status of a student is changed.
- * @param onRowClick A callback function to be called when a row is clicked.
- */
 export const StudentsTable: React.FC<AttendanceTableProps> = ({
   isAttendanceMode,
   onAttendanceChange,

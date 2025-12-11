@@ -7,7 +7,7 @@ import type { BodyMeasurement } from "@/types/bodyMeasurement";
 const bodyMeasurementService = {
   getAll: async (pageable?: PageableParams): Promise<Page<BodyMeasurement>> => {
     const response = await api.get<Page<BodyMeasurement>>(API_ENDPOINTS.BODY_MEASUREMENTS.BASE, {
-      params: pageable, // automaticamente converte { page: 1, size: 10 } => ?page=1&size=10
+      params: pageable,
     });
     return response.data;
   },

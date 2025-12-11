@@ -1,4 +1,3 @@
-// src/pages/ClassroomDetails/ClassroomHeader.tsx
 import { CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -15,12 +14,6 @@ interface ClassroomHeaderProps {
   onSaveAttendance: () => void;
 }
 
-/**
- * @description The header component for the classroom details page.
- * It displays the classroom name and action buttons.
- * @param isAttendanceMode A boolean indicating if the component is in attendance mode.
- * @param onStartAttendance A callback function to be called when the "Registrar Presença" button is clicked.
- */
 export const ClassroomHeader: React.FC<ClassroomHeaderProps> = ({
   isAttendanceMode,
   onStartAttendance,

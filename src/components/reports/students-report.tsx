@@ -41,8 +41,6 @@ export function StudentsReport() {
     toast.promise(reportService.getStudentsReport(values.classroomId, values.startDate, values.endDate), {
       loading: TOAST_MESSAGES.LOADING.LOADING,
       success: (response) => {
-        // IMPORTANTE: O header content-disposition só está acessível se o backend
-        // enviar Access-Control-Expose-Headers: content-disposition
         const filename = extractFilenameFromHeader(
           response.headers['content-disposition'],
           'students_report.xlsx'

@@ -1,4 +1,3 @@
-// src/pages/ClassroomDetails/UpdateClassroomDialog.tsx
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,12 +35,6 @@ const updateClassroomSchema = z.object({
 
 type UpdateClassroomFormData = z.infer<typeof updateClassroomSchema>;
 
-/**
- * @description A dialog component for updating classroom details.
- * It contains a form to input classroom details and handles the submission.
- * @param classroomId The ID of the classroom to which the student will be added.
- * @param onClassroomUpdated A callback function to be called when a classroom is successfully updated.
- */
 export const UpdateClassroomDialog: React.FC<UpdateClassroomDialogProps> = ({
   classroomId,
   classroomName,

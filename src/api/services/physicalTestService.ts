@@ -7,7 +7,7 @@ import type { PhysicalTest } from "@/types/physicalTest";
 const physicalTestService = {
   getAll: async (pageable?: PageableParams): Promise<Page<PhysicalTest>> => {
     const response = await api.get<Page<PhysicalTest>>(API_ENDPOINTS.PHYSICAL_TESTS.BASE, {
-      params: pageable, // automaticamente converte { page: 1, size: 10 } => ?page=1&size=10
+      params: pageable,
     });
     return response.data;
   },

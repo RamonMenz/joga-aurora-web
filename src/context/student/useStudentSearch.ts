@@ -2,9 +2,9 @@ import { useContext } from "react";
 import { StudentSearchContext } from "./StudentSearchContext";
 
 export const useStudentSearch = () => {
-  const ctx = useContext(StudentSearchContext);
-  if (!ctx) throw new Error("useStudentSearch must be used within StudentSearchProvider");
-  return ctx;
+  const context = useContext(StudentSearchContext);
+  if (!context) throw new Error("useStudentSearch must be used within StudentSearchProvider");
+  return context;
 };
 
 export default useStudentSearch;

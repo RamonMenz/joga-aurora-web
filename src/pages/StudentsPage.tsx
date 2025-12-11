@@ -20,9 +20,7 @@ export const StudentsPage = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { studentsPage, isLoading, filter, size, setFilter, search, paginate, changePageSize, clear } = useStudentSearch();
 
-  // Initialize the form with current filter from context and avoid unnecessary fetch on mount
   useEffect(() => {
-    // Keep form fields in sync with context filter
     reset({
       nome: filter?.nome ?? "",
       data_nascimento_ini: filter?.data_nascimento_ini ?? undefined,
@@ -32,7 +30,6 @@ export const StudentsPage = () => {
     });
   }, [filter, reset]);
 
-  // First-load fetch only if there's no cached data
   useEffect(() => {
     if (!studentsPage && !isLoading) {
       void search({ page: 0, size, filter });
@@ -75,7 +72,6 @@ export const StudentsPage = () => {
     void search({ page: 0, size, filter });
   }, [search, size, filter]);
 
-  // No-op memo to keep hooks order; filters moved to StudentsFilterDialog component
   useMemo(() => undefined, []);
 
   return (

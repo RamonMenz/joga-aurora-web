@@ -12,7 +12,6 @@ export function ThemeProvider({
     () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
   );
 
-  // Apply current theme and sync with system if needed
   useEffect(() => {
     const root = window.document.documentElement;
     const mql = window.matchMedia("(prefers-color-scheme: dark)");
@@ -30,7 +29,6 @@ export function ThemeProvider({
 
     if (theme === "system") {
       const onChange = () => apply();
-      // Listen to OS theme changes while on 'system'
       mql.addEventListener?.("change", onChange);
       return () => mql.removeEventListener?.("change", onChange);
     }

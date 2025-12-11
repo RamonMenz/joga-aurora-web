@@ -14,13 +14,10 @@ interface ClassroomsProviderProps {
 
 export const ClassroomsProvider: React.FC<ClassroomsProviderProps> = ({ children }) => {
   const { isAuthenticated } = useAuth();
-  // Lista de turmas
   const [classrooms, setClassrooms] = useState<Classroom[]>([]);
   const [areClassroomsLoading, setAreClassroomsLoading] = useState(false);
-  // Turma atual
   const [classroom, setClassroom] = useState<Classroom | null>(null);
   const [isClassroomLoading, setIsClassroomLoading] = useState(false);
-  // Presenças da turma atual
   const [attendances, setAttendances] = useState<Attendance[]>([]);
 
   const loadClassrooms = useCallback(async () => {
@@ -90,7 +87,6 @@ export const ClassroomsProvider: React.FC<ClassroomsProviderProps> = ({ children
     setAttendances([]);
   }, []);
 
-  // Memo minimiza re-renders em consumidores que não usam todas as propriedades
   const value = useMemo(
     () => ({
       classrooms,
@@ -101,7 +97,6 @@ export const ClassroomsProvider: React.FC<ClassroomsProviderProps> = ({ children
       loadClassroom,
       clearClassroom,
       attendances,
-      // Expor método de atualização controlada em vez de set raw
       updateAttendanceList: (updater: (prev: Attendance[]) => Attendance[]) =>
         setAttendances((prev) => updater(prev)),
     }), [

@@ -78,8 +78,6 @@ export function AttendancesReport() {
       {
         loading: TOAST_MESSAGES.LOADING.LOADING,
         success: (response) => {
-          // IMPORTANTE: O header content-disposition só está acessível se o backend
-          // enviar Access-Control-Expose-Headers: content-disposition
           const filename = extractFilenameFromHeader(
             response.headers['content-disposition'],
             'attendance_report.xlsx'
@@ -98,7 +96,6 @@ export function AttendancesReport() {
           return "Relatório gerado com sucesso!";
         },
         error: (error: unknown) => {
-          // Tentativa de extrair mensagem de erro da resposta Axios
           const axiosMessage =
             typeof error === "object" &&
             error !== null &&

@@ -9,7 +9,7 @@ const classroomService = {
     pageable?: PageableParams
   ): Promise<Page<Classroom>> => {
     const response = await api.get<Page<Classroom>>(API_ENDPOINTS.CLASSROOMS.BASE, {
-      params: pageable, // automaticamente converte { page: 1, size: 10 } => ?page=1&size=10
+      params: pageable,
     });
     return response.data;
   },

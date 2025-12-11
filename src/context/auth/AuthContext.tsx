@@ -13,5 +13,4 @@ export interface AuthContextType {
   logout: () => Promise<void>;
 }
 
-// Context inicial como undefined para detectar uso fora do provider
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);

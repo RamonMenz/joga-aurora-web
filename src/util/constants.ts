@@ -1,7 +1,3 @@
-/**
- * Constantes globais da aplicação
- */
-
 export const APP_CONFIG = {
   NAME: 'Joga Aurora',
   VERSION: '1.0.0',

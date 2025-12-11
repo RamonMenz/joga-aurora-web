@@ -95,7 +95,6 @@ export const StudentDialog: React.FC<StudentDialogProps> = ({
 
   useEffect(() => {
     if (isDialogOpen) {
-      // If context hasn't loaded classrooms yet, refresh
       if (!contextClassrooms || contextClassrooms.length === 0) {
         void loadClassrooms();
       }

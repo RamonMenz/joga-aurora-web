@@ -4,7 +4,6 @@ import { API_ENDPOINTS } from "@/util/constants";
 const systemService = {
   health: async (): Promise<boolean> => {
     try {
-      // Keep it simple: a GET to health endpoint; resolves true on 2xx
       const res = await api.get(API_ENDPOINTS.SYSTEM.HEALTH, { timeout: 5000 });
       return res.status >= 200 && res.status < 300;
     } catch {

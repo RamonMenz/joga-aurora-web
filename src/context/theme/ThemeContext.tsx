@@ -12,5 +12,4 @@ export type ThemeProviderState = {
   setTheme: (theme: Theme) => void;
 };
 
-// Context criado como undefined para detectar uso fora do provider
 export const ThemeProviderContext = createContext<ThemeProviderState | undefined>(undefined);
